@@ -1,0 +1,100 @@
+{% extends 'todo_list/base.html' %}
+
+{% block content %}
+<div class="mb-4 d-flex align-items-center justify-content-between gap-3 flex-wrap flex-md-nowrap">
+    <div>
+        <h1 class="mb-0">Task List</h1>
+    </div>
+    <div>
+        <a href="{% url 'todo_list:task_create' %}" class="btn btn-primary">Add New</a>
+        <button type="button" class="btn btn-outline-danger">Clear All</button>
+    </div>
+</div>
+{% for task in tasks %}
+<div class="task card card-body mb-3
+    {% if task.end_date and task.end_date == today %}
+    border-warning border-3 bg-warning
+    {% elif task.end_date and task.end_date <= today %}
+    border-danger border-3 bg-danger
+    {% endif %}
+    {% if task.is_completed == True %}
+    border-dark border-1 bg-dark
+    {% endif %}
+    " style="--bs-bg-opacity: .25;">
+    <div class="d-flex gap-4 align-items-center flex-wrap flex-md-nowrap">
+        <div>
+            <form action="{% url 'todo_list:task_change_status' pk=task.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-outline-primary">
+                    {% if task.is_completed == True %}
+                    <i class="bi bi-check-square"></i>
+                    {% else %}
+                    <i class="bi bi-square"></i>
+                    {% endif %}
+                </button>
+            </form>
+
+        </div>
+        <div class="flex-grow-1 justify-content-between d-flex gap-3 flex-wrap flex-md-nowrap">
+            {% if task.is_completed == True %}
+            <h2 class="h5 m-0">
+                <del>{{ task.title }}</del>
+            </h2>
+            {% else %}
+            <h2 class="h5 m-0">{{ task.title }}</h2>
+            {% endif %}
+            {% if task.description %}
+            <button class="btn btn-link p-0" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample2">
+                View Details
+            </button>
+            {% endif %}
+        </div>
+        {% if task.end_date %}
+        <div>
+            <h2 class="h6 m-0">{{ task.end_date }}</h2>
+        </div>
+        {% endif %}
+        <div class="d-flex gap-2">
+            <a href="{% url 'todo_list:task_update' pk=task.pk %}" class="btn btn-sm btn-primary">Edit</a>
+            <form action="{% url 'todo_list:task_delete' pk=task.pk %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+            </form>
+        </div>
+    </div>
+    {% if task.description %}
+    <div class="collapse mt-3" id="collapseExample2">
+        {{ task.description }}
+    </div>
+    {% endif %}
+</div>
+{% endfor %}
+{% if is_paginated %}
+<nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+        <li class="page-item previous">
+            <a href="?page={{ page_obj.previous_page_number }}" class="page-link">Prev</a>
+        </li>
+        {% endif %}
+        {% for page_num in page_obj.paginator.page_range %}
+        {% if page_obj.number == page_num %}
+        <li class="page-item active">
+            <span class="page-link ">{{ page_num }}</span>
+        </li>
+        {% elif page_num >= page_obj.number|add:-2 and page_num <= page_obj.number|add:2 %}
+        <li class="page-item">
+            <a href="?page={{ page_num }}" class="page-link">{{ page_num }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+        <li class="page-item previous">
+            <a href="?page={{ page_obj.next_page_number }}" class="page-link">Next</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

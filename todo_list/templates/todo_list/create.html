@@ -1,0 +1,21 @@
+{% extends 'todo_list/base.html' %}
+
+{% block content %}
+
+<div class="mb-4 d-flex align-items-center justify-content-between gap-3 flex-wrap flex-md-nowrap">
+    <div>
+        <h1 class="mb-0">Create Task</h1>
+    </div>
+    <div>
+        <a href="{% url 'todo_list:task_list' %}" class="btn btn-outline-primary">View Task List</a>
+    </div>
+</div>
+<div class="row">
+    <form action="" method="post" class="col-md-6 offset-md-3">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit" class="btn btn-primary">Add new task</button>
+    </form>
+</div>
+
+{% endblock %}
