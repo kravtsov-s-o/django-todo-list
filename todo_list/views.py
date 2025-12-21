@@ -13,7 +13,10 @@ from todo_list.models import Task
 # Create your views here.
 class MainView(View):
     def get(self, request):
-        return redirect('todo_list:task_list')
+        if request.user.is_authenticated:
+            return redirect('todo_list:task_list')
+
+        return redirect('login')
 
 
 class TaskListView(LoginRequiredMixin, ListView):
