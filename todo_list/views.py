@@ -78,6 +78,12 @@ class TaskDeleteView(LoginRequiredMixin, DeleteView):
         return success_url
 
 
+class TaskBulkDeleteView(LoginRequiredMixin, View):
+    def post(self, request):
+        Task.objects.filter(owner=request.user).delete()
+        return redirect("todo_list:task_list")
+
+
 class TaskToggleCompleteView(LoginRequiredMixin, View):
     def post(self, request, pk):
         task = get_object_or_404(Task, pk=pk, owner=request.user)
