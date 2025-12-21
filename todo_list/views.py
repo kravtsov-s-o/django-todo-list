@@ -1,38 +1,55 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import User
-from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponseNotAllowed
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views import View
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, RedirectView
 
 from todo_list.forms import TaskForm
 from todo_list.models import Task
 
 
 # Create your views here.
-class MainView(View):
-    def get(self, request):
-        if request.user.is_authenticated:
-            return redirect('todo_list:task_list')
+class MainView(RedirectView):
+    pattern_name = 'todo_list:task_list'
 
-        return redirect('login')
+    def get_redirect_url(self, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return reverse_lazy("login")
+        return super().get_redirect_url(*args, **kwargs)
 
 
 class TaskListView(LoginRequiredMixin, ListView):
+    FILTER_ACTIVE = 'active'
+    FILTER_DONE = 'done'
+    FILTER_ALL = 'all'
+
     model = Task
     template_name = "todo_list/index.html"
     context_object_name = "tasks"
     paginate_by = 20
 
+    filters = (FILTER_ACTIVE, FILTER_DONE, FILTER_ALL)
+
     def get_queryset(self):
         tasks = Task.objects.filter(owner=self.request.user)
+
+        self.filter_active = self.request.GET.get("status") or self.FILTER_ACTIVE
+
+        if self.filter_active == self.FILTER_ACTIVE:
+            return tasks.filter(is_completed=False)
+        elif self.filter_active == self.FILTER_DONE:
+            return tasks.filter(is_completed=True)
+
         return tasks
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
             "today": timezone.localdate(),
+            "filters": self.filters,
+            "filter_active": self.filter_active,
         })
         return context
 
@@ -79,6 +96,9 @@ class TaskDeleteView(LoginRequiredMixin, DeleteView):
 
 
 class TaskBulkDeleteView(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        return HttpResponseNotAllowed(["POST"])
+
     def post(self, request):
         Task.objects.filter(owner=request.user).delete()
         return redirect("todo_list:task_list")
