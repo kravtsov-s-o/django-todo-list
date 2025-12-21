@@ -13,9 +13,9 @@
 {% for task in tasks %}
 <div class="task card card-body mb-3
     {% if task.end_date and task.end_date == today %}
-    border-warning border-3 bg-warning
+    border-warning border-2 bg-warning
     {% elif task.end_date and task.end_date <= today %}
-    border-danger border-3 bg-danger
+    border-danger border-2 bg-danger
     {% endif %}
     {% if task.is_completed == True %}
     border-dark border-1 bg-dark

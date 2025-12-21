@@ -6,39 +6,16 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 </head>
-<body>
-<header class="main-header mb-4">
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-xxl">
-            <a class="navbar-brand" href="#">ToDo List</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false"
-                    aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">All</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Need to do</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">is_completed</a>
-                    </li>
-                </ul>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
-            </div>
-        </div>
-    </nav>
-</header>
+<body class="d-flex flex-column vh-100">
+{% include 'todo_list/parts/header.html' %}
 <section class="container-xxl mt-4">
     {% block content %} {% endblock %}
 </section>
+<footer class="footer mt-auto py-3 bg-light">
+    <div class="container-xxl">
+        <span class="text-muted">Copyright {% now "Y" %}</span>
+    </div>
+</footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
