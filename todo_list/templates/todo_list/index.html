@@ -7,20 +7,22 @@
     </div>
     <div>
         <a href="{% url 'todo_list:task_create' %}" class="btn btn-primary">Add New</a>
+        {% if tasks %}
         <button type="button" class="btn btn-outline-danger"
                 data-bs-toggle="modal" data-bs-target="#deleteAll">Clear All
         </button>
+        {% endif %}
     </div>
 </div>
 {% if tasks %}
 {% for task in tasks %}
 <div class="task card card-body mb-3
-    {% if task.end_date and task.end_date == today %}
+    {% if not task.is_completed and task.end_date and task.end_date == today %}
     border-warning border-2 bg-warning
-    {% elif task.end_date and task.end_date <= today %}
+    {% elif not task.is_completed and task.end_date and task.end_date <= today %}
     border-danger border-2 bg-danger
     {% endif %}
-    {% if task.is_completed == True %}
+    {% if task.is_completed %}
     border-dark border-1 bg-dark
     {% endif %}
     " style="--bs-bg-opacity: .25;">
