@@ -89,6 +89,9 @@ class TaskUpdateView(LoginRequiredMixin, UpdateView):
 class TaskDeleteView(LoginRequiredMixin, DeleteView):
     model = Task
 
+    def get_queryset(self):
+        return Task.objects.filter(owner=self.request.user)
+
     def get_success_url(self):
         success_url = self.request.META.get("HTTP_REFERER", "/")
 
