@@ -6,6 +6,7 @@ from django.utils import timezone
 from django.views import View
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, RedirectView
 
+from todo_list._mixins import TitleContextMixin
 from todo_list.forms import TaskForm
 from todo_list.models import Task
 
@@ -20,11 +21,12 @@ class MainView(RedirectView):
         return super().get_redirect_url(*args, **kwargs)
 
 
-class TaskListView(LoginRequiredMixin, ListView):
+class TaskListView(LoginRequiredMixin, TitleContextMixin, ListView):
     FILTER_ACTIVE = 'active'
     FILTER_DONE = 'done'
     FILTER_ALL = 'all'
 
+    title = "Task List"
     model = Task
     template_name = "todo_list/index.html"
     context_object_name = "tasks"
@@ -54,7 +56,8 @@ class TaskListView(LoginRequiredMixin, ListView):
         return context
 
 
-class TaskAddView(LoginRequiredMixin, CreateView):
+class TaskAddView(LoginRequiredMixin, TitleContextMixin, CreateView):
+    title = "Create Task"
     model = Task
     form_class = TaskForm
     template_name = "todo_list/create.html"
@@ -72,7 +75,8 @@ class TaskAddView(LoginRequiredMixin, CreateView):
         )
 
 
-class TaskUpdateView(LoginRequiredMixin, UpdateView):
+class TaskUpdateView(LoginRequiredMixin, TitleContextMixin, UpdateView):
+    title = "Update Task"
     model = Task
     form_class = TaskForm
     template_name = "todo_list/create.html"

@@ -3,7 +3,7 @@
 {% block content %}
 <div class="mb-4 d-flex align-items-center justify-content-between gap-3 flex-wrap flex-md-nowrap">
     <div>
-        <h1 class="mb-0">Task List</h1>
+        <h1 class="mb-0">{{ title }}</h1>
     </div>
     <div>
         <a href="{% url 'todo_list:task_create' %}" class="btn btn-primary">Add New</a>
