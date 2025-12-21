@@ -9,15 +9,12 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    {% for filter in filters %}
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Active</a>
+                        <a class="nav-link text-capitalize {% if filter == filter_active %} active {% endif %}"
+                           href="?status={{ filter }}">{{ filter }}</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Done</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">All</a>
-                    </li>
+                    {% endfor %}
                 </ul>
                 <form action="{% url 'logout' %}" method="post">
                     {% csrf_token %}
