@@ -26,7 +26,7 @@ This project was created for learning purposes and focuses on backend architectu
 ## Project Setup
 1. Git Clone
 ```bash
-git clone
+git clone https://github.com/kravtsov-s-o/django-todo-list
 cd django-todo-list
 ```
 2. Create and activate virtual environment
@@ -64,7 +64,7 @@ python manage.py createsuperuser
 ```bash
 python manage.py runserver
 ```
-The project will be available at: http://127.0.0.1:8000/
+The project will be available at: `http://127.0.0.1:8000/`
 
 ## Testing
 
