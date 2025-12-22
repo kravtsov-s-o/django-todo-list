@@ -13,6 +13,13 @@ from todo_list.models import Task
 
 # Create your views here.
 class MainView(RedirectView):
+    """
+    Entry point of application.
+
+    Redirects authenticated users to the task list
+    and unauthenticated users to the login page.
+    """
+
     pattern_name = 'todo_list:task_list'
 
     def get_redirect_url(self, *args, **kwargs):
@@ -22,6 +29,14 @@ class MainView(RedirectView):
 
 
 class TaskListView(LoginRequiredMixin, TitleContextMixin, ListView):
+    """
+    Displays a list of tasks belonging to the authenticated user.
+
+    Supports filtering tasks by completion status:
+    - active
+    - done
+    - all
+    """
     FILTER_ACTIVE = 'active'
     FILTER_DONE = 'done'
     FILTER_ALL = 'all'
@@ -57,6 +72,12 @@ class TaskListView(LoginRequiredMixin, TitleContextMixin, ListView):
 
 
 class TaskAddView(LoginRequiredMixin, TitleContextMixin, CreateView):
+    """
+    Creates a new task for the authenticated user.
+
+    The task owner is automatically assigned based on the current user.
+    """
+
     title = "Create Task"
     model = Task
     form_class = TaskForm
@@ -76,6 +97,12 @@ class TaskAddView(LoginRequiredMixin, TitleContextMixin, CreateView):
 
 
 class TaskUpdateView(LoginRequiredMixin, TitleContextMixin, UpdateView):
+    """
+    Updates an existing task owned by the authenticated user.
+
+    Prevents users from modifying tasks that do not belong to them.
+    """
+
     title = "Update Task"
     model = Task
     form_class = TaskForm
@@ -91,6 +118,12 @@ class TaskUpdateView(LoginRequiredMixin, TitleContextMixin, UpdateView):
 
 
 class TaskDeleteView(LoginRequiredMixin, DeleteView):
+    """
+    Deletes a single task owned by the authenticated user.
+
+    After deletion, the user is redirected back to the previous page.
+    """
+
     model = Task
 
     def get_queryset(self):
@@ -103,6 +136,12 @@ class TaskDeleteView(LoginRequiredMixin, DeleteView):
 
 
 class TaskBulkDeleteView(LoginRequiredMixin, View):
+    """
+    Deletes all tasks belonging to the authenticated user.
+
+    Accepts only POST requests to prevent accidental mass deletion.
+    """
+
     def get(self, request, *args, **kwargs):
         return HttpResponseNotAllowed(["POST"])
 
@@ -112,6 +151,12 @@ class TaskBulkDeleteView(LoginRequiredMixin, View):
 
 
 class TaskToggleCompleteView(LoginRequiredMixin, View):
+    """
+    Toggles the completion status of a task.
+
+    Allows switching a task between completed and active states.
+    """
+
     def post(self, request, pk):
         task = get_object_or_404(Task, pk=pk, owner=request.user)
 

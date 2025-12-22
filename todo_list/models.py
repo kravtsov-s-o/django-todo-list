@@ -5,6 +5,13 @@ from todo_list.utils import validate_future_date
 
 # Create your models here.
 class Task(models.Model):
+    """
+    Represents a single task owned by a user.
+
+    Each task is linked to one user and cannot be accessed by others.
+    Supports optional due date validation and completion status.
+    """
+
     owner = models.ForeignKey("auth.User", on_delete=models.CASCADE, verbose_name="Owner")
     title = models.CharField(max_length=30, verbose_name="Title")
     description = models.TextField(blank=True, null=True, verbose_name="Description")
